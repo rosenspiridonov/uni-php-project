@@ -2,12 +2,18 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "start": "npm run server && npm run dev",
         "dev": "vite",
-        "build": "vite build"
+        "server": "php artisan serve",
+        "build": "vite build",
+        "db": "php artisan migrate:fresh && php artisan db:seed"
     },
     "devDependencies": {
+        "@popperjs/core": "^2.11.6",
         "axios": "^1.6.1",
+        "bootstrap": "^5.2.3",
         "laravel-vite-plugin": "^1.0.0",
+        "sass": "^1.56.1",
         "vite": "^5.0.0"
     }
 }
