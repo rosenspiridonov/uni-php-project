@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course\Course;
+use App\Models\Organization\Organization;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $courses = Course::select()->orderBy("id", "desc")->take(3)->get();
+        $organizations = Organization::select()->orderBy("id", "desc")->take(3)->get();
+
+        return view("home", compact('courses', 'organizations'));
     }
 }

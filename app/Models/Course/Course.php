@@ -2,6 +2,7 @@
 
 namespace App\Models\Course;
 
+use App\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,11 +15,18 @@ class Course extends Model
     protected $fillable = [ 
         "name",
         "date",
-        "time",
-        "teacher_id",
+        "duration",
+        "price",
+        "teacher",
+        "image",
         "organization_id",
         "place_id"
     ];
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id');
+    }
 
     public $timestamps = true;
 }
