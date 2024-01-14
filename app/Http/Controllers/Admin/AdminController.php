@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Admin;
 use App\Models\Course\Course;
 use App\Models\Organization\Organization;
 use Illuminate\Http\Request;
-use Hash;
-use File;
-use Redirect;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminController extends Controller
 {
@@ -31,11 +32,11 @@ class AdminController extends Controller
     public function index()
     {
 
-        $countriesCount = Course::select()->count();
-        $citiesCount = Organization::select()->count();
+        $coursesCount = Course::select()->count();
+        $organizationsCount = Organization::select()->count();
         $adminsCount = Admin::select()->count();
 
-        return view('admins.index', compact('countriesCount', 'citiesCount', 'adminsCount'));
+        return view('admins.index', compact('coursesCount', 'organizationsCount', 'adminsCount'));
     }
 
     public function allAdmins()
@@ -66,43 +67,40 @@ class AdminController extends Controller
 
     public function allCourses()
     {
-        $allCourses = Course::select()->orderBy('id', 'desc')->get();
+        // This method seems fine as long as the 'organization' relationship is correctly defined in the Course model.
+        $allCourses = Course::with('organization')->get();
 
         return view('admins.allCourses', compact('allCourses'));
     }
 
     public function createCourse()
     {
-        return view('admins.createCourses');
+        $organizations = Organization::all();
+
+        return view('admins.createCourses', compact('organizations'));
     }
 
     public function storeCourse(Request $req)
     {
-        Request()->validate([
-            "name" => "required|max:40",
-            "population" => "required|max:40",
-            "territory" => "required|max:40",
-            "avg_price" => "required|max:40",
-            "description" => "required|max:300",
-            "image" => "required|mimes:jpeg,png,jpg,gif",
-            "continent" => "required|max:40"
+        $validatedData = $req->validate([
+            "name" => "required|max:255",
+            "date" => "required|date",
+            "duration" => "required|numeric",
+            "price" => "required|numeric",
+            "teacher" => "required|max:255",
+            "image" => "required|image|mimes:jpeg,png,jpg,gif",
+            "organization_id" => "required|exists:organizations,id",
         ]);
 
-        $destinationPath = 'assets/images/';
-        $myImage = $req->image->getClientOriginalName();
-        $req->image->move(public_path($destinationPath), $myImage);
+        if ($req->hasFile('image')) {
+            $destinationPath = 'assets/images/';
+            $myImage = $req->image->getClientOriginalName();
+            $req->image->storeAs($destinationPath, $myImage);
+        }
 
-        $storeCourses = Course::create([
-            'name' => $req->name,
-            'population' => $req->population,
-            'territory' => $req->territory,
-            'avg_price' => $req->avg_price,
-            'description' => $req->description,
-            'image' => $myImage,
-            'continent' => $req->continent,
-        ]);
-        if ($storeCourses) {
-            return Redirect::route('all.countries')->with(['success' => 'Course created successfully']);
+        $course = Course::create($validatedData + ['image' => $myImage]);
+        if ($course) {
+            return Redirect::route('all.courses')->with('success', 'Course created successfully');
         }
 
         return view('admins.createCourses');
@@ -110,21 +108,24 @@ class AdminController extends Controller
 
     public function deleteCourse($id)
     {
-        $deleteCourse = Course::find($id);
+        $course = Course::find($id);
 
-        if (File::exists(public_path('assets/images/' . $deleteCourse->image))) {
-            File::delete(public_path('assets/images/' . $deleteCourse->image));
-        } else {
-            //dd('File does not exists.');
-        }
-        $deleteCourse->delete();
-        if ($deleteCourse) {
-            return Redirect::route('all.countries')->with(['success' => 'Course deleted successfully']);
+        if (!$course) {
+            return redirect()->route('admin.allCourses')->with('error', 'Course not found.');
         }
 
+        $imagePath = public_path('assets/images/' . $course->image);
+        if (File::exists($imagePath)) {
+            File::delete($imagePath);
+        }
 
-        return view('admins.allCourses');
+        if ($course->delete()) {
+            return redirect()->route('admin.allCourses')->with('success', 'Course deleted successfully');
+        }
+
+        return redirect()->route('admin.allCourses')->with('error', 'Could not delete the course.');
     }
+
 
     public function allOrganizations()
     {

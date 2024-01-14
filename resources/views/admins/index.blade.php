@@ -6,9 +6,9 @@
     <div class="col-md-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Countries</h5>
+          <h5 class="card-title">Courses</h5>
           <!-- <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6> -->
-          <p class="card-text">number of countries: {{$countriesCount}}</p>
+          <p class="card-text">number of courses: {{$coursesCount}}</p>
          
         </div>
       </div>
@@ -16,9 +16,9 @@
     <div class="col-md-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Cities</h5>
+          <h5 class="card-title">Organization</h5>
           
-          <p class="card-text">number of cities: {{$citiesCount}}</p>
+          <p class="card-text">number of organizations: {{$organizationsCount}}</p>
         
         </div>
       </div>

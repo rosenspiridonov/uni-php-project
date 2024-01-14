@@ -21,7 +21,6 @@ class CourseSeeder extends Seeder
                 'teacher' => 'Lara Doe',
                 'image' => 'course-1.jpg',
                 'organization_id' => 1,
-                'place_id' => 1,
             ],
             [
                 'name' => 'Advanced Web Development',
@@ -31,7 +30,6 @@ class CourseSeeder extends Seeder
                 'teacher' => 'John Doe',
                 'image' => 'course-2.jpg',
                 'organization_id' => 1,
-                'place_id' => 2,
             ],
             [
                 'name' => 'Data Science Fundamentals',
@@ -41,7 +39,6 @@ class CourseSeeder extends Seeder
                 'teacher' => 'Mark Smith',
                 'image' => 'course-3.jpg',
                 'organization_id' => 2,
-                'place_id' => 3,
             ],
             [
                 'name' => 'Basic Graphic Design',
@@ -51,7 +48,6 @@ class CourseSeeder extends Seeder
                 'teacher' => 'John Doe',
                 'image' => 'course-1.jpg',
                 'organization_id' => 3,
-                'place_id' => 1,
             ],
             [
                 'name' => 'Digital Marketing 101',
@@ -61,7 +57,6 @@ class CourseSeeder extends Seeder
                 'teacher' => 'John Smith',
                 'image' => 'course-2.jpg',
                 'organization_id' => 2,
-                'place_id' => 2,
             ],
         ];
 

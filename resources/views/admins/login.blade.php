@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="row">
-    <div class="col">
-      <div class="card">
+    <div class="col-6 offset-3">
+      <div class="card" style="margin-top: 100px">
         <div class="card-body">
           <h5 class="card-title mt-5">Login</h5>
           <form method="POST" class="p-auto" action="{{route('check.login')}}">

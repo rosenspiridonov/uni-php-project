@@ -19,8 +19,7 @@ class Course extends Model
         "price",
         "teacher",
         "image",
-        "organization_id",
-        "place_id"
+        "organization_id"
     ];
 
     public function organization()
