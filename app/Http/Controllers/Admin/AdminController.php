@@ -93,7 +93,7 @@ class AdminController extends Controller
         ]);
 
         if ($req->hasFile('image')) {
-            $destinationPath = 'assets/images/';
+            $destinationPath = 'assets/img/';
             $myImage = $req->image->getClientOriginalName();
             $req->image->storeAs($destinationPath, $myImage);
         }
@@ -111,19 +111,19 @@ class AdminController extends Controller
         $course = Course::find($id);
 
         if (!$course) {
-            return redirect()->route('admin.allCourses')->with('error', 'Course not found.');
+            return redirect()->route('all.courses')->with('error', 'Course not found.');
         }
 
-        $imagePath = public_path('assets/images/' . $course->image);
+        $imagePath = public_path('assets/img/' . $course->image);
         if (File::exists($imagePath)) {
             File::delete($imagePath);
         }
 
         if ($course->delete()) {
-            return redirect()->route('admin.allCourses')->with('success', 'Course deleted successfully');
+            return redirect()->route('all.courses')->with('success', 'Course deleted successfully');
         }
 
-        return redirect()->route('admin.allCourses')->with('error', 'Could not delete the course.');
+        return redirect()->route('all.courses')->with('error', 'Could not delete the course.');
     }
 
 
@@ -145,12 +145,10 @@ class AdminController extends Controller
         Request()->validate([
             "name" => "required|max:40",
             "image" => "required|mimes:jpeg,png,jpg,gif",
-            'num_days' => "required|max:40",
-            'price' => "required|max:5",
-            'course_id' => "required|max:5",
+            'category' => "required|max:40",
         ]);
 
-        $destinationPath = 'assets/images/';
+        $destinationPath = 'assets/img/';
         $myImage = $req->image->getClientOriginalName();
         $req->image->move(public_path($destinationPath), $myImage);
 
@@ -161,8 +159,9 @@ class AdminController extends Controller
             'price' => $req->price,
             'course_id' => $req->course_id
         ]);
+
         if ($storeOrganization) {
-            return Redirect::route('all.cities')->with(['success' => 'Organization created successfully']);
+            return Redirect::route('all.organizations')->with(['success' => 'Organization created successfully']);
         }
 
         return view('admins.createOrganizations');
@@ -172,14 +171,14 @@ class AdminController extends Controller
     {
         $deleteOrganization = Organization::find($id);
 
-        if (File::exists(public_path('assets/images/' . $deleteOrganization->image))) {
-            File::delete(public_path('assets/images/' . $deleteOrganization->image));
+        if (File::exists(public_path('assets/img/' . $deleteOrganization->image))) {
+            File::delete(public_path('assets/img/' . $deleteOrganization->image));
         } else {
             //dd('File does not exists.');
         }
         $deleteOrganization->delete();
         if ($deleteOrganization) {
-            return Redirect::route('all.cities')->with(['success' => 'Organization deleted successfully']);
+            return Redirect::route('all.organizations')->with(['success' => 'Organization deleted successfully']);
         }
 
 
