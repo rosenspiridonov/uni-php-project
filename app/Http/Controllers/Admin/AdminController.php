@@ -67,7 +67,6 @@ class AdminController extends Controller
 
     public function allCourses()
     {
-        // This method seems fine as long as the 'organization' relationship is correctly defined in the Course model.
         $allCourses = Course::with('organization')->get();
 
         return view('admins.allCourses', compact('allCourses'));
@@ -193,5 +192,4 @@ class AdminController extends Controller
 
         return view('admins.allOrganizations');
     }
-    //
 }
