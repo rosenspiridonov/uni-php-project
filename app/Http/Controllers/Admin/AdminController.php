@@ -91,14 +91,23 @@ class AdminController extends Controller
             "image" => "required|image|mimes:jpeg,png,jpg,gif",
             "organization_id" => "required|exists:organizations,id",
         ]);
-
+    
+        $imageName = null;
+    
         if ($req->hasFile('image')) {
-            $destinationPath = 'assets/img/';
-            $myImage = $req->image->getClientOriginalName();
-            $req->image->storeAs($destinationPath, $myImage);
+            $file = $req->file('image');
+            $imageName = time() . '_' . $file->getClientOriginalName(); 
+            $destinationPath = public_path('assets/img'); 
+    
+            $file->move($destinationPath, $imageName);
         }
-
-        $course = Course::create($validatedData + ['image' => $myImage]);
+    
+        if ($imageName) {
+            $validatedData['image'] = $imageName; 
+        }
+    
+        $course = Course::create($validatedData);
+    
         if ($course) {
             return Redirect::route('all.courses')->with('success', 'Course created successfully');
         }
